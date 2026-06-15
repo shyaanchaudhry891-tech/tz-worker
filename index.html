@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Portal - Daily Payroll</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; }
+        body { background: #121212; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .wrapper { background: #1e1e1e; padding: 30px; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); width: 100%; max-width: 450px; border: 1px solid #333; }
+        h2 { text-align: center; margin-bottom: 25px; color: #00adb5; font-size: 26px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #eee; font-weight: 500; }
+        input { width: 100%; padding: 14px; background: #2d2d2d; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 16px; outline: none; }
+        input:focus { border-color: #00adb5; }
+        button { width: 100%; padding: 14px; background: #00adb5; border: none; color: #fff; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #007a80; }
+        .error { color: #ff4d4d; text-align: center; margin-top: 12px; font-weight: bold; display: none; }
+        
+        /* Dashboard view */
+        .dashboard { display: none; }
+        .welcome { text-align: center; font-size: 20px; margin-bottom: 25px; color: #00adb5; border-bottom: 1px solid #333; padding-bottom: 15px; }
+        .card { background: #252525; border-right: 5px solid #00adb5; padding: 15px; margin-bottom: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .card.red { border-right-color: #ff4d4d; }
+        .card.green { border-right-color: #28a745; }
+        .label { font-weight: bold; color: #ccc; }
+        .value { font-weight: bold; font-size: 18px; }
+        .logout { background: #3d3d3d; margin-top: 25px; }
+        .logout:hover { background: #555; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div id="loginPage">
+        <h2>Employee Portal</h2>
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="userEmail" placeholder="name@company.com">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="userPassword" placeholder="••••••••">
+        </div>
+        <button onclick="checkLogin()">Log In</button>
+        <div id="loginError" class="error">Ghalt Email ya Password!</div>
+    </div>
+
+    <div id="dashboardPage" class="dashboard">
+        <div class="welcome">KhushAamdeed, <span id="empName"></span>!</div>
+        
+        <div class="card">
+            <span class="label">Daily Dihaari (Fix):</span>
+            <span class="value" id="empWage"></span>
+        </div>
+        <div class="card red">
+            <span class="label">Late Hours (Kitne Ghante):</span>
+            <span class="value" id="empLate"></span>
+        </div>
+        <div class="card green">
+            <span class="label">Overtime Hours:</span>
+            <span class="value" id="empOT"></span>
+        </div>
+        <div class="card red">
+            <span class="label">Advance Liya Gaya:</span>
+            <span class="value" id="empAdvance"></span>
+        </div>
+        <div class="card green" style="background: #1b3a24; border-right-width: 8px;">
+            <span class="label" style="font-size: 18px; color: #28a745;">Net Salary (Total):</span>
+            <span class="value" id="empNet" style="font-size: 20px; color: #28a745;"></span>
+        </div>
+
+        <button onclick="logOut()" class="logout">Log Out</button>
+    </div>
+</div>
+
+<script>
+    // 100 Bandon ka data aap yahan is tarah add kar sakte hain:
+    const employeeData = {
+        "moiz@test.com": { pass: "moiz123", name: "Moiz Ahmed", wage: "1,500 KD", late: "1.5 Hours", ot: "0 Hours", advance: "0 KD", net: "1,350 KD" },
+        "kala@test.com": { pass: "kala123", name: "Kala Khan", wage: "1,500 KD", late: "0 Hours (On Time)", ot: "2 Hours", advance: "50 KD", net: "1,600 KD" },
+        "doger@test.com": { pass: "doger123", name: "Doger Sahab", wage: "2,000 KD", late: "0 Hours", ot: "4 Hours", advance: "20 KD", net: "2,380 KD" }
+    };
+
+    function checkLogin() {
+        const email = document.getElementById('userEmail').value.toLowerCase().trim();
+        const pass = document.getElementById('userPassword').value;
+        const errMsg = document.getElementById('loginError');
+
+        if (employeeData[email] && employeeData[email].pass === pass) {
+            errMsg.style.display = 'none';
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboardPage').style.display = 'block';
+            
+            // Populate Data
+            const data = employeeData[email];
+            document.getElementById('empName').innerText = data.name;
+            document.getElementById('empWage').innerText = data.wage;
+            document.getElementById('empLate').innerText = data.late;
+            document.getElementById('empOT').innerText = data.ot;
+            document.getElementById('empAdvance').innerText = data.advance;
+            document.getElementById('empNet').innerText = data.net;
+        } else {
+            errMsg.style.display = 'block';
+        }
+    }
+
+    function logOut() {
+        document.getElementById('userEmail').value = '';
+        document.getElementById('userPassword').value = '';
+        document.getElementById('loginPage').style.display = 'block';
+        document.getElementById('dashboardPage').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
