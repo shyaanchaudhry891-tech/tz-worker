@@ -1,160 +1,116 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tz Workers - Smart Portal</title>
+    <title>Employee Portal - Daily Payroll</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; }
-        body { background: #121212; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .wrapper { background: #1e1e1e; padding: 25px; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); width: 100%; max-width: 480px; border: 1px solid #333; }
-        h2 { text-align: center; margin-bottom: 20px; color: #00adb5; }
-        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #333; }
-        .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; color: #aaa; font-weight: bold; }
-        .tab.active { color: #00adb5; border-bottom: 3px solid #00adb5; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 6px; color: #ccc; font-size: 14px; }
-        input, select { width: 100%; padding: 12px; background: #2d2d2d; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 16px; outline: none; }
-        input:focus, select:focus { border-color: #00adb5; }
-        button { width: 100%; padding: 12px; background: #00adb5; border: none; color: #fff; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        button:hover { background: #007a80; }
-        .card { background: #252525; border-right: 5px solid #00adb5; padding: 12px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .card.red { border-right-color: #ff4d4d; }
-        .card.green { border-right-color: #28a745; }
-        .value { font-weight: bold; font-size: 16px; }
-        .view-section { display: none; }
-        .view-section.active { display: block; }
-        .success-msg { color: #28a745; text-align: center; margin-top: 10px; font-weight: bold; display: none; }
-        .error { color: #ff4d4d; text-align: center; margin-top: 10px; font-weight: bold; display: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background: #1e1e1e; padding: 30px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); width: 100%; max-width: 400px; border: 1px solid #2d2d2d; }
+        h2 { text-align: center; margin-bottom: 25px; color: #00bcd4; font-size: 28px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #b3b3b3; font-size: 14px; }
+        input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 16px; outline: none; }
+        input:focus { border-color: #00bcd4; }
+        button { width: 100%; padding: 14px; background: #00838f; border: none; border-radius: 8px; color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { background: #006064; }
+        .error { color: #ff5252; text-align: center; margin-top: 15px; font-weight: bold; display: none; }
+        .dashboard { display: none; }
+        .welcome { text-align: center; color: #00bcd4; margin-bottom: 20px; font-size: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+        .data-row { display: flex; justify-content: space-between; background: #252525; padding: 12px 15px; margin-bottom: 12px; border-radius: 8px; font-size: 15px; align-items: center; }
+        .data-row.blue { border-right: 4px solid #00bcd4; }
+        .data-row.red { border-right: 4px solid #ff5252; }
+        .data-row.green { border-right: 4px solid #4caf50; }
+        .data-label { color: #aaaaaa; }
+        .data-value { font-weight: bold; font-size: 16px; }
+        .total-row { background: #1b3a24; color: #4caf50; margin-top: 20px; padding: 15px; font-size: 18px; }
+        .logout-btn { background: #444; margin-top: 20px; }
+        .logout-btn:hover { background: #555; }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <div class="tabs" id="authTabs" style="display: none;">
-        <div class="tab active" onclick="switchTab('employee-view')">Employee View</div>
-        <div class="tab" onclick="switchTab('admin-view')">Admin Register</div>
-    </div>
-
-    <div id="loginPage" class="view-section active">
-        <h2>Tz Workers Portal</h2>
+<div class="container">
+    <div id="login-form">
+        <h2>Employee Portal</h2>
         <div class="input-group">
             <label>Email Address</label>
-            <input type="email" id="userEmail" placeholder="name@company.com">
+            <input type="email" id="email" placeholder="name@company.com">
         </div>
         <div class="input-group">
             <label>Password</label>
-            <input type="password" id="userPassword" placeholder="••••••••">
+            <input type="password" id="password" placeholder="••••••••">
         </div>
         <button onclick="checkLogin()">Log In</button>
-        <div id="loginError" class="error">Ghalt Email ya Password!</div>
+        <div id="error-msg" class="error">Ghalt Email ya Password!</div>
     </div>
 
-    <div id="employeeDashboard" class="view-section">
-        <h2 style="font-size: 20px; margin-bottom: 15px;">KhushAamdeed, <span id="empName"></span>!</h2>
-        <div class="card"><span>Daily Dihaari (Fix):</span><span class="value" id="vWage">0</span></div>
-        <div class="card red"><span>Late Hours:</span><span class="value" id="vLate">0 Hours</span></div>
-        <div class="card green"><span>Overtime Hours:</span><span class="value" id="vOT">0 Hours</span></div>
-        <div class="card red"><span>Advance Diya:</span><span class="value" id="vAdvance">0</span></div>
-        <div class="card green" style="background: #1b3a24;"><strong>Net Salary (Total):</strong><strong class="value" id="vNet" style="color:#28a745;">0</strong></div>
-        <button onclick="logOut()" style="background: #444;">Log Out</button>
-    </div>
-
-    <div id="adminDashboard" class="view-section">
-        <h2>Haazri Register (Admin)</h2>
+    <div id="dashboard" class="dashboard">
+        <div class="welcome" id="welcome-msg"></div>
         
-        <div class="input-group">
-            <label>Employee Chunain</label>
-            <select id="admSelectEmp" onchange="loadAdminEmpData()">
-                </select>
+        <div class="data-row blue">
+            <span class="data-label">Daily Dihaari (Fix):</span>
+            <span class="data-value" id="val-wage"></span>
         </div>
-        <div class="input-group">
-            <label>Daily Base Dihaari</label>
-            <input type="number" id="admWage" placeholder="Eg. 1500">
+        <div class="data-row red">
+            <span class="data-label">Late Hours (Kitne Ghante):</span>
+            <span class="data-value" id="val-late"></span>
         </div>
-        <div class="input-group">
-            <label>Aane ka Time (In Time)</label>
-            <input type="time" id="admInTime" value="09:00">
+        <div class="data-row green">
+            <span class="data-label">Overtime Hours:</span>
+            <span class="data-value" id="val-ot"></span>
         </div>
-        <div class="input-group">
-            <label>Jaane ka Time (Out Time)</label>
-            <input type="time" id="admOutTime" value="18:00">
+        <div class="data-row red">
+            <span class="data-label">Advance Liya Gaya:</span>
+            <span class="data-value" id="val-advance"></span>
         </div>
-        <div class="input-group">
-            <label>Advance Payment (Agar Di)</label>
-            <input type="number" id="admAdvance" value="0">
+        <div class="data-row green total-row">
+            <span class="data-label" style="color: #4caf50;">Net Salary (Total):</span>
+            <span class="data-value" id="val-net"></span>
         </div>
-        <button onclick="calculateAndSaveSalary()">Haazri & Salary Save Karain</button>
-        <div id="saveSuccess" class="success-msg">Data kamyabi se save ho gaya!</div>
-        <button onclick="logOut()" style="background: #444; margin-top: 10px;">Log Out</button>
+
+        <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
 </div>
 
 <script>
-    // Shift timings fix (9 AM to 6 PM = 9 Hours Duty)
-    const StandardIn = "09:00";
-    const StandardOut = "18:00";
-
-    // Main Data Store (Auto-saves to Mobile Storage)
-    let defaultEmployees = {
-        "admin@tz.com": { pass: "admin123", name: "Admin (Owner)", role: "admin" },
-        "moiz@test.com": { pass: "moiz123", name: "Moiz Ahmed", role: "user", wage: 1500, late: 0, ot: 0, advance: 0, net: 1500 },
-        "kala@test.com": { pass: "kala123", name: "Kala Khan", role: "user", wage: 1500, late: 0, ot: 0, advance: 0, net: 1500 },
-        "doger@test.com": { pass: "doger123", name: "Doger Sahab", role: "user", wage: 2000, late: 0, ot: 0, advance: 0, net: 2000 }
+    // Workers Data
+    const employeeData = {
+        "moiz@test.com": { pass: "moiz123", name: "Moiz Ahmed", wage: "1,500 KD", late: "1.5 Hours", ot: "0 Hours", advance: "0 KD", net: "1,350 KD" },
+        "kala@test.com": { pass: "kala123", name: "Kala Khan", wage: "1,500 KD", late: "0 Hours (On Time)", ot: "2 Hours", advance: "50 KD", net: "1,600 KD" },
+        "doger@test.com": { pass: "doger123", name: "Doger Sahab", wage: "2,000 KD", late: "0 Hours", ot: "4 Hours", advance: "20 KD", net: "2,380 KD" }
     };
 
-    if(!localStorage.getItem("empDatabase")) {
-        localStorage.setItem("empDatabase", JSON.stringify(defaultEmployees));
-    }
-    
-    let db = JSON.parse(localStorage.getItem("empDatabase"));
-    let currentLoggedInUser = "";
-
-    // Load admin dropdown
-    const selectEl = document.getElementById("admSelectEmp");
-    for (let email in db) {
-        if(db[email].role !== 'admin') {
-            let opt = document.createElement("option");
-            opt.value = email;
-            opt.innerText = db[email].name;
-            selectEl.appendChild(opt);
-        }
-    }
-
     function checkLogin() {
-        const email = document.getElementById('userEmail').value.toLowerCase().trim();
-        const pass = document.getElementById('userPassword').value;
-        const errMsg = document.getElementById('loginError');
+        const email = document.getElementById('email').value.toLowerCase().trim();
+        const pass = document.getElementById('password').value;
+        const errorMsg = document.getElementById('error-msg');
 
-        if (db[email] && db[email].pass === pass) {
-            errMsg.style.display = 'none';
-            document.getElementById('loginPage').classList.remove('active');
-            currentLoggedInUser = email;
+        if (employeeData[email] && employeeData[email].pass === pass) {
+            errorMsg.style.display = 'none';
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
 
-            if(db[email].role === 'admin') {
-                document.getElementById('adminDashboard').classList.add('active');
-                loadAdminEmpData();
-            } else {
-                document.getElementById('employeeDashboard').classList.add('active');
-                showEmployeeData(email);
-            }
+            // Load Data
+            document.getElementById('welcome-msg').innerText = "KhushAamdeed, " + employeeData[email].name + "!";
+            document.getElementById('val-wage').innerText = employeeData[email].wage;
+            document.getElementById('val-late').innerText = employeeData[email].late;
+            document.getElementById('val-ot').innerText = employeeData[email].ot;
+            document.getElementById('val-advance').innerText = employeeData[email].advance;
+            document.getElementById('val-net').innerText = employeeData[email].net;
         } else {
-            errMsg.style.display = 'block';
+            errorMsg.style.display = 'block';
         }
     }
 
-    function showEmployeeData(email) {
-        let user = db[email];
-        document.getElementById('empName').innerText = user.name;
-        document.getElementById('vWage').innerText = user.wage + " Unit";
-        document.getElementById('vLate').innerText = user.late + " Hours";
-        document.getElementById('vOT').innerText = user.ot + " Hours";
-        document.getElementById('vAdvance').innerText = user.advance + " Unit";
-        document.getElementById('vNet').innerText = user.net + " Unit";
+    function logout() {
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
     }
+</script>
 
-    function loadAdminEmpData() {
-        let email = selectEl.value;
-        if(email && db[email]) {
-
-
+</body>
+</html>
